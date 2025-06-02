@@ -1,4 +1,4 @@
 class PortfolioStockAim < ApplicationRecord
-    belongs_to :Portfolio
-    belongs_to :Stock
+    belongs_to :portfolio
+    belongs_to :stock
 end
