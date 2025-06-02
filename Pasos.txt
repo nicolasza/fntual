@@ -10,8 +10,8 @@
     tambien tiene un listado de aimstocks los cuales indican el stock y porcentaje que deberia tener el portafolio, 
     la funcion de rebalanceo puede ser por stock o por valor.
 ** clase stock -> contiene el id del stock,nombre y una funcion de precio actual.
-** clase stockQuantity -> contiene un id de stock y una cantidad.
-** clase stockAim -> contiene un stock y un porcentaje.
+** clase PortfolioStocks -> contiene un stock y una cantidad.
+** clase PortfolioStockAim -> contiene un stock y un porcentaje.
 ** clase portafolio -> contiene un listado de stockQuantity, un listado de stockAim, un nombre, una funcion de rebalance.
 
 ** logica de rebalance -> puedo considerar el balanceo o por precio o por cantidad, por lo que permitire agregar un booleano indicativo, 
@@ -21,4 +21,4 @@
 
 
 * Luego de definir la estructura comence a realizar el proyecto de ruby on rails.
-* cree los modelos a traves del comando "generate model"
+* cree los modelos a traves del comando "bin/rails generate model"
