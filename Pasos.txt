@@ -1,0 +1,24 @@
+* primero encontre la oportunidad de fintual, lei el trabajo, el desafio y las herramientas que utilizan.
+* compare las herramientas que yo manejo y las que ellos utilizan. nose ruby on rails, nose React, nose React Native, pero si utilizo typescript y tengo muchos conceptos de UX y front.
+* lei la documentacion oficial de ruby on rails(https://rubyonrails.org/docs), viendo como realizar el backend y la logica de lo solicitado, el framework es MVC
+* investige como retornar solo json, utilizando templates de json es posible (google y llege a https://stackoverflow.com/questions/2088280/in-rails-how-do-you-render-json-using-a-view).
+* investige si es posible crear solo una clase sin necesidad de una bd, tambien es posible(la documentacion inicial empieza directo a unirlo a una estructura de bd) (googlie  y llege a  https://guides.rubyonrails.org/active_record_basics.html donde explican mejor el uso)
+* me decido en realizarlo en ruby on rails, como desafio personal(primera ves utilizandolo) y para estar acorde a las tecnologias que piden.
+
+* antes de comenzar a codear analiso el problema presentado, donde obtengo los siguientes puntos-requerimientos:
+** definiciones que asumo, un portafolio tiene un listado de stocks en su haber con una cantidad por cada uno, 
+    tambien tiene un listado de aimstocks los cuales indican el stock y porcentaje que deberia tener el portafolio, 
+    la funcion de rebalanceo puede ser por stock o por valor.
+** clase stock -> contiene el id del stock,nombre y una funcion de precio actual.
+** clase stockQuantity -> contiene un id de stock y una cantidad.
+** clase stockAim -> contiene un stock y un porcentaje.
+** clase portafolio -> contiene un listado de stockQuantity, un listado de stockAim, un nombre, una funcion de rebalance.
+
+** logica de rebalance -> puedo considerar el balanceo o por precio o por cantidad, por lo que permitire agregar un booleano indicativo, 
+    recorro los stockQuantity sumando el total de cada uno en moneda y tambien sumo el total de las monedas para obtener el porcentaje de cada uno.
+    recorro los stocks aim y comparo los porcentajes obtenidos versus los que se desean, si hay diferencia, calculo la cantidad que se debe comprar o vender para llegar
+    retorno el listado en json de los stock que se deben mover.
+
+
+* Luego de definir la estructura comence a realizar el proyecto de ruby on rails.
+* cree los modelos a traves del comando "generate model"
