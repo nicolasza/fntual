@@ -1,0 +1,60 @@
+<h1><%= @portfolio.name %></h1>
+
+<h2>Aims</h2>
+
+<div id="portfolio_stock_aims">
+    <table>
+        <tr>
+            <th>Stock Name</th>
+            <th>Percentage</th>
+            <th>Eliminar</th>
+        </tr>
+    <% @portfolio.portfolio_stock_aims.each do |portfolioStocksAim| %>
+        <tr>
+            <td>
+            <%= portfolioStocksAim.stock.identifier %>
+            </td>
+            <td>
+            <%= portfolioStocksAim.percentage %>
+            </td>
+            <td>
+            <%= button_to "Eliminar", portfolio_stock_aim_path(@portfolio.id,portfolioStocksAim.id), method: :delete, data: { turbo_confirm: "Estas seguro?" } %>
+            </td>
+        </tr>
+    <% end %>
+    <% if @portfolio.portfolio_stock_aims.empty? %>
+        <tr><td>No hay objetivos de stock en este portafolio.</td></tr>
+    <% end %>
+    </table>
+    
+    <% if not @is_full_aim %>
+        <div>
+        <%= link_to "Nuevo Objetivo de Stock", portfolio_stock_aims_new_path(@portfolio) %>
+        </div>
+    <% end %>
+    
+</div>
+
+
+<h2>Stocks</h2>
+<% if @portfolio.portfolio_stocks.empty? %>
+  <p>No stocks in this portfolio.</p>
+<% end %>
+<div id="portfolio_stocks">
+    <% @portfolio.portfolio_stocks.each do |portfolioStocks| %>
+        <div>
+            <%= portfolioStocks.stock.name %>
+            <%= portfolioStocks.quantity %>
+        </div>
+    <% end %>
+</div>
+
+<%= button_to "Calcular Rebalance", rebalance_path(@portfolio) %>
+
+<% if flash[:rebalance] %>
+  <div ><%= flash[:rebalance] %></div>
+<% end %>
+
+</br>
+</br>
+<%= link_to "Volver", portfolios_path %>

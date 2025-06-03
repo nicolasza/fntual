@@ -11,4 +11,38 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+
+
+  #ruta por defecto
+  root "portfolios#index"
+
+  ##RUTAS DE PORTFOLIOS
+  #ruta de portafolios
+  get "/portfolios", to: "portfolios#index"
+  #ruta de creacion de un nuevo portafolio
+  get "/portfolios/new", to: "portfolios#new", as: "new_portfolio"
+  #ruta para ver un portafolio específico
+  get "/portfolios/:id", to: "portfolios#show", as: "portfolio"
+  #ruta para reequilibrar un portafolio
+  post "/portfolios/:id/rebalance", to: "portfolios#rebalance", as: "rebalance"
+  #ruta para crear un portafolio
+  post "/portfolios", to: "portfolios#create"
+
+  ###RUTAS DE STOCKS
+  #ruta de stocks
+  get "/stocks", to: "stocks#index"
+  #ruta de visualizacion de un stock
+  get "/stocks/:id", to: "stocks#show", as: "stock"
+  #ruta para crear un stock
+  post "/stocks", to: "stocks#create", as: "new_stock"
+   #ruta para editar un stock
+  patch "/stocks/:id/edit", to: "stocks#edit", as: "edit_stock"
+
+  
+  #rutas de aims de stocks en portafolios
+  get "/portfolios/:id/portfolio_stock_aims/new", to: "portfolios#newStockAim", as: "portfolio_stock_aims_new"
+  delete "/portfolios/:id/portfolio_stock_aims/:stock_id", to: "portfolios#removeStockAim", as: "portfolio_stock_aim"
+  post "/portfolios/:id/portfolio_stock_aims/", to: "portfolios#addStockAim", as: "portfolio_stock_aim_add"
+ 
+
 end

@@ -1,0 +1,64 @@
+<h1>Stocks</h1>
+
+
+
+<div id="stocks">
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Identificador</th>
+            <th>Precio</th>
+            <th>Modificar</th>
+        </tr>
+
+    <% if flash[:errorEdit] %>
+        <div class="error"><%= flash[:errorEdit] %></div>
+    <% end %>
+
+    <% @stocks.each do |stock| %>
+        <tr>
+        <%= form_with model: stock, url: edit_stock_path(stock) do |form| %>
+            <th>
+            <%= stock.id %>
+            </th>
+            <th>
+            <%= form.text_field :identifier %>
+            </th>
+            <th>
+            <%= form.number_field :price, step: 0.1 %>
+            </th>
+            <th>
+            <%= form.submit "Modificar" %>
+            </th>
+        <% end %>
+        </tr>
+    <% end %>
+    </table>
+</div>
+
+<div id="new_stock">
+    <h2>Nuevo Stock</h2>
+    <% if flash[:errorCreate] %>
+        <div class="error"><%= flash[:errorCreate] %></div>
+    <% end %>
+
+    <%= form_with model: Stock.new, url: new_stock_path() do |form| %>
+        <div>
+            <%= form.label :identifier %>
+            <%= form.text_field :identifier %>
+        </div>
+
+        <div>
+            <%= form.label :price %>
+            <%= form.number_field :price, step: 0.1 %>
+        </div>
+
+        <div>
+            <%= form.submit "Crear Stock" %>
+        </div>
+    <% end %>
+</div>
+
+</br>
+</br>
+<%= link_to "Volver", portfolios_path %>

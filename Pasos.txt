@@ -8,17 +8,24 @@
 * antes de comenzar a codear analiso el problema presentado, donde obtengo los siguientes puntos-requerimientos:
 ** definiciones que asumo, un portafolio tiene un listado de stocks en su haber con una cantidad por cada uno, 
     tambien tiene un listado de aimstocks los cuales indican el stock y porcentaje que deberia tener el portafolio, 
-    la funcion de rebalanceo puede ser por stock o por valor.
+    la funcion de rebalanceo es en base al valor de los stocks(cantidad x precio).
 ** clase stock -> contiene el id del stock,nombre y una funcion de precio actual.
 ** clase PortfolioStocks -> contiene un stock y una cantidad.
 ** clase PortfolioStockAim -> contiene un stock y un porcentaje.
 ** clase portafolio -> contiene un listado de stockQuantity, un listado de stockAim, un nombre, una funcion de rebalance.
 
-** logica de rebalance -> puedo considerar el balanceo o por precio o por cantidad, por lo que permitire agregar un booleano indicativo, 
-    recorro los stockQuantity sumando el total de cada uno en moneda y tambien sumo el total de las monedas para obtener el porcentaje de cada uno.
+** logica de rebalance -> considero el balanceo de precio x cantidad, 
+    recorro los stockQuantity sumando el total de cada uno en moneda(cantidad x precio) y tambien sumo el total de las monedas para obtener el porcentaje de cada uno.
     recorro los stocks aim y comparo los porcentajes obtenidos versus los que se desean, si hay diferencia, calculo la cantidad que se debe comprar o vender para llegar
     retorno el listado en json de los stock que se deben mover.
 
 
 * Luego de definir la estructura comence a realizar el proyecto de ruby on rails.
-* cree los modelos a traves del comando "bin/rails generate model"
+* cree los modelos a traves del comando "bin/rails generate model ..." ajustando las variables de las tablas segun los requerimientos
+* agrege las relaciones entre los modelos.
+* agrege las validaciones de los campos en los modelos
+* cree las rutas a Portfolio, modificando archivo "config/routes.rb".
+* cree el controlador Portfolios , a traves del comando "bin/rails generate controller ..."
+* cree vistas de portfolio basicas (opte por hacer tablas basicas de datos para no alargar mas el tiempo de desarrollo). 
+* cree controlador de stocks con vistas basicas y ruta.
+* creacion de objetivos de stock de portafolios con funciones de controlador y ruta.

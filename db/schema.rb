@@ -13,8 +13,8 @@
 ActiveRecord::Schema[8.0].define(version: 2025_06_02_230749) do
   create_table "portfolio_stock_aims", force: :cascade do |t|
     t.float "percentage"
-    t.integer "stock_id"
     t.integer "portfolio_id"
+    t.integer "stock_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["portfolio_id"], name: "index_portfolio_stock_aims_on_portfolio_id"
@@ -23,8 +23,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_02_230749) do
 
   create_table "portfolio_stocks", force: :cascade do |t|
     t.float "quantity"
-    t.integer "stock_id"
     t.integer "portfolio_id"
+    t.integer "stock_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["portfolio_id"], name: "index_portfolio_stocks_on_portfolio_id"
