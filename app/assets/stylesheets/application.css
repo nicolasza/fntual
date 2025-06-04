@@ -8,3 +8,27 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+ #portfolio_stock_aims{
+    background-color: antiquewhite;
+ }
+
+ #portfolio_stocks{
+    background-color: lightblue;
+ }
+
+ #portfolio_stock_buy{
+    background-color: lightgreen;
+ }
+
+ #rebalance_result{
+    background-color: lightcoral;
+ }
+
+ .notice{
+    background-color: yellow;
+ }
+
+ .error{
+    background-color: lightpink;
+ }

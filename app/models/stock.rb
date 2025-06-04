@@ -5,5 +5,4 @@ class Stock < ApplicationRecord
     def identifier_price
     "#{identifier} (#{price}$)"
     end
-
 end

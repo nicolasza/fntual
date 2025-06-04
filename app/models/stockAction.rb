@@ -1,5 +1,4 @@
 class StockAction
-
     def initialize(action, stock, amount)
         @action = action
         @stock = stock

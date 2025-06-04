@@ -18,7 +18,7 @@
     recorro los stockQuantity sumando el total de cada uno en moneda(cantidad x precio) y tambien sumo el total de las monedas para obtener el porcentaje de cada uno.
     recorro los stocks aim y comparo los porcentajes obtenidos versus los que se desean, si hay diferencia, calculo la cantidad que se debe comprar o vender para llegar
     retorno el listado en json de los stock que se deben mover.
-
+    ** esta logica es la que pense inicialmente, dentro del modelo de portafolio en la funcion de balanceo agrege un par de comentarios y condiciones adicionales
 
 * Luego de definir la estructura comence a realizar el proyecto de ruby on rails.
 * cree los modelos a traves del comando "bin/rails generate model ..." ajustando las variables de las tablas segun los requerimientos
@@ -30,3 +30,14 @@
 * cree controlador de stocks con vistas basicas y ruta.
 * creacion de objetivos de stock de portafolios con funciones de controlador y ruta.
 * para la creacion de los forms me base en la guia https://guides.rubyonrails.org/form_helpers.html
+* movi la logica de rebalance a el modelo de portafolio, junto a las funciones de compra y venta de stocks.
+* agrege un par de estilos para la vista del portafolio.
+* hice ajustes de redondeo en vista y orden de datos.
+* termine el codigo.
+* agrege datos de prueba
+
+* MEJORAS:
+** Mover logicas de portafolio stocks y aims al modelo de portafolio.
+** considerar los valores redondeados para evitar problemas de precision en el rebalanceo.
+** mejorar las visuales.
+** testing de componentes

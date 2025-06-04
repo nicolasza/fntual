@@ -1,16 +1,17 @@
-<h1>Portfolios</h1>
-<%= link_to "Stocks", stocks_path %>
+<h1>Portafolios</h1>
+<p>
+<%= link_to "Listado de Stocks", stocks_path %>
+</p>
 </br>
 
-<%= link_to "New Porfolio", new_portfolio_path %>
+<%= link_to "Crear Portafolio", new_portfolio_path %>
 </br>
 </br>
 <div id="portfolios">
   <% @portfolios.each do |portfolio| %>
     <div>
-      <%= portfolio.id %>
-      <%= link_to portfolio.name, portfolio %>
+      <%= portfolio.id %> -
+      Portafolio: <%= link_to portfolio.name, portfolio %>
     </div>
   <% end %>
 </div>
-

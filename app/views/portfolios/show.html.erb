@@ -1,33 +1,43 @@
+
 <h1>Portafolio: <%= @portfolio.name %></h1>
 
- 
+ <% if flash[:notice] %>
+    <div class="notice"><%= flash[:notice] %></div>
+<% end %>  
+
+<% if flash[:error] %>
+    <div class="error"><%= flash[:error] %></div>
+<% end %>  
 
 <h2>Objetivos</h2>
 
 <div id="portfolio_stock_aims">
-    <table>
-        <tr>
-            <th>Nombre de Accion</th>
-            <th>Porcentaje objetivo</th>
-            <th>Eliminar</th>
-        </tr>
-    <% @portfolio.portfolio_stock_aims.each do |portfolioStocksAim| %>
-        <tr>
-            <td>
-            <%= portfolioStocksAim.stock.identifier %>
-            </td>
-            <td>
-            <%= portfolioStocksAim.percentage %>
-            </td>
-            <td>
-            <%= button_to "Eliminar", portfolio_stock_aim_path(@portfolio.id,portfolioStocksAim.id), method: :delete, data: { turbo_confirm: "¿Estas seguro de eliminar el objetivo?" } %>
-            </td>
-        </tr>
-    <% end %>
     <% if @portfolio.portfolio_stock_aims.empty? %>
         <tr><td>No hay objetivos de stock en este portafolio.</td></tr>
+    <% else %>
+        <table>
+            <tr>
+                <th>Nombre de Accion</th>
+                <th>Porcentaje objetivo</th>
+                <th>Eliminar</th>
+            </tr>
+        <% @portfolio.portfolio_stock_aims.order(:stock_id).each do |portfolioStocksAim| %>
+            <tr>
+                <td>
+                <%= portfolioStocksAim.stock.identifier %>
+                </td>
+                <td>
+                <%= portfolioStocksAim.percentage %>
+                </td>
+                <td>
+                <%= button_to "Eliminar", portfolio_stock_aim_path(@portfolio.id,portfolioStocksAim.id), method: :delete, data: { turbo_confirm: "¿Estas seguro de eliminar el objetivo?" } %>
+                </td>
+            </tr>
+        <% end %>
+        
+        </table>
+
     <% end %>
-    </table>
     
     <% if not @is_full_aim %>
         <div>
@@ -45,55 +55,53 @@
 
 <div id="portfolio_stocks">
 
-    <% if flash[:notice] %>
-    <div class="notice"><%= flash[:notice] %></div>
-    <% end %>  
     <% if @portfolio.portfolio_stocks.empty? %>
     <p>No hay acciones en el portafolio.</p>
+    <% else %>
+
+
+
+        <table>
+            <tr>
+                <th>Accion</th>
+                <th>Cantidad</th>
+                <th>Valorizado</th>
+                <th>Vender en $</th>
+            </tr>
+        <% @portfolio.portfolio_stocks.order(:stock_id).each do |portfolioStocks| %>
+            <tr>
+                <td>
+                <%= portfolioStocks.stock.identifier %>(<%= portfolioStocks.stock.price %>$)
+                </td>
+                <td>
+                <%= portfolioStocks.quantity.round(1) %>
+                </td>
+
+                <td>
+                <%= portfolioStocks.valorized_price %>$ 
+                (<%=((portfolioStocks.valorized_price/@total_value)*100).round(1) %>%)
+                </td>
+
+                <td>
+                <%= form_with model:Stock.new, url: portfolio_stock_sell_path(@portfolio) do |form| %>
+                    <%= form.hidden_field :stock_id, value: portfolioStocks.stock_id %>
+                    <%= form.number_field :price, value:0, min:0.1,max:portfolioStocks.quantity * portfolioStocks.stock.price,step:0.1 %>
+                    <%= form.submit "Vender",data: { turbo_confirm: "¿Estas seguro de vender?" } %>
+                    <% end %>
+                    <%= button_to "Vender Todo", portfolio_stock_sell_all_path(@portfolio.id,portfolioStocks.id), method: :delete, data: { turbo_confirm: "¿Estas seguro de vender todo?" } %>
+
+                </td>
+
+            </tr>
+        <% end %>
+        </table>
     <% end %>
-
-
-
-    <table>
-        <tr>
-            <th>Accion</th>
-            <th>Cantidad</th>
-            <th>Valorizado</th>
-            <th>Vender en $</th>
-        </tr>
-    <% @portfolio.portfolio_stocks.each do |portfolioStocks| %>
-        <tr>
-            <td>
-            <%= portfolioStocks.stock.identifier %>(<%= portfolioStocks.stock.price %>$)
-            </td>
-            <td>
-            <%= portfolioStocks.quantity %>
-            </td>
-
-            <td>
-            <%= portfolioStocks.valorized_price %>$ 
-            (<%=((portfolioStocks.valorized_price/@total_value)*100).round(1) %>%)
-            </td>
-
-            <td>
-               <%= form_with model:Stock.new, url: portfolio_stock_sell_path(@portfolio) do |form| %>
-                <%= form.hidden_field :stock_id, value: portfolioStocks.stock_id %>
-                <%= form.number_field :price, value:0, min:0.1,max:portfolioStocks.quantity * portfolioStocks.stock.price,step:0.1 %>
-                <%= form.submit "Vender",data: { turbo_confirm: "¿Estas seguro de vender?" } %>
-                <% end %>
-                <%= button_to "Vender Todo", portfolio_stock_sell_all_path(@portfolio.id,portfolioStocks.id), method: :delete, data: { turbo_confirm: "¿Estas seguro de vender todo?" } %>
-
-            </td>
-
-        </tr>
-    <% end %>
-    </table>
 </div>
 
 
 
-<h2>Comprar</h2>
-<div>
+<h2>Comprar en $</h2>
+<div id="portfolio_stock_buy">
     <%= form_with model:Stock.new, url: portfolio_stock_buy_path(@portfolio) do |form| %>
     <%= form.collection_select :stock_id, Stock.all, :id, :identifier_price %>
     <%= form.number_field :price, value:0, min:0.1,step:0.1 %>
@@ -107,7 +115,7 @@
 <%= button_to "Calcular Rebalance", rebalance_path(@portfolio) %>
 
 <% if flash[:rebalance] != [] %>
-  <div >
+  <div id="rebalance_result">
     <table>
         <tr>
             <th>Accion</th>

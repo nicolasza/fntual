@@ -1,8 +1,6 @@
 class PortfoliosController < ApplicationController
-
-
   def index
-    @portfolios = Portfolio.all
+    @portfolios = Portfolio.all.order(:id)
   end
 
   def show
@@ -20,7 +18,7 @@ class PortfoliosController < ApplicationController
     if @portfolio_stocks.any?
     @total_value = @portfolio_stocks.sum("quantity * stocks.price")
     end
-    if( flash[:rebalance].nil? )
+    if flash[:rebalance].nil?
       flash[:rebalance] = [] # Inicializo el flash para evitar errores si no se ha reequilibrado
     end
   end
@@ -32,25 +30,29 @@ class PortfoliosController < ApplicationController
   def rebalance
     @portfolio = Portfolio.find(params[:id])
     @rebalance=@portfolio.rebalance
-    #muestro los datos que retorna para ver si se ha reequilibrado correctamente
-    flash[:rebalance] = @rebalance
-    #redirijo a la vista del portafolio
+    # muestro los datos que retorna para ver si se ha reequilibrado correctamente
+    flash[:rebalance] = @rebalance[0]
+    if @rebalance[0].empty?
+      flash[:notice] = @rebalance[1]
+    else
+      flash[:notice] = @rebalance[1]
+    end
+    # redirijo a la vista del portafolio
     redirect_to @portfolio
   end
 
   def rebalance_apply
     @portfolio = Portfolio.find(params[:id])
     @rebalance=@portfolio.rebalance
-    
     # Recorro las acciones a comprar y vender
-    @rebalance.each do |action|
+    @rebalance[0].each do |action|
       stock = action.stock
       amount = action.amount
 
-      if action.action == 'buy'
+      if action.action == "buy"
         # Llamo al metodo de compra de acciones del portafolio
         @portfolio.portfolioStockBuy(stock, amount)
-      elsif action.action == 'sell'
+      elsif action.action == "sell"
         # Llamo al metodo de venta de acciones del portafolio
         @portfolio.portfolioStockSell(stock.id, amount)
       end
@@ -58,7 +60,6 @@ class PortfoliosController < ApplicationController
 
     flash[:notice] = "Balanceo del portafolio aplicado correctamente."
     redirect_to @portfolio and return
-
   end
 
   def create
@@ -73,25 +74,24 @@ class PortfoliosController < ApplicationController
 
   def newStockAim
     @portfolio = Portfolio.find(params[:id])
-    #sumo los porcentajes de los aims
+    # sumo los porcentajes de los aims
     @total_percentage = @portfolio.portfolio_stock_aims.sum(:percentage)
-    #si es igual a 100, indicio booleano para no permitir agregar mas aims
+    # si es igual a 100, indicio booleano para no permitir agregar mas aims
     @is_full_aim = @total_percentage >= 100
     if @is_full_aim
       flash[:error] = "El portafolio ya tiene el 100% de aims asignados."
       redirect_to @portfolio and return
     end
-    #si es menor calculor el restante para limitar el porcentaje de los nuevos aims
+    # si es menor calculor el restante para limitar el porcentaje de los nuevos aims
     @remaining_percentage_aim = 100 - @total_percentage if @total_percentage < 100
-
   end
 
   def addStockAim
     @params2 = stockaim_params
-    puts @params2[:stock_id]
     @portfolio = Portfolio.find(params[:id])
+
     # Verificar si el aim ya existe
-    existing_aim = @portfolio.portfolio_stock_aims.find_by(stock_id:@params2[:stock_id])
+    existing_aim = @portfolio.portfolio_stock_aims.find_by(stock_id: @params2[:stock_id])
     if existing_aim
       flash[:error] = "El objetivo para esta accion ya existe."
       redirect_to portfolio_stock_aims_new_path(@portfolio) and return
@@ -99,14 +99,12 @@ class PortfoliosController < ApplicationController
 
     # Crear un nuevo aim
     aim = @portfolio.portfolio_stock_aims.create(@params2)
-    
     if aim.save
       redirect_to @portfolio
     else
       flash[:error] = aim.errors.full_messages.to_sentence
       redirect_to @portfolio
     end
-
   end
 
   def removeStockAim
@@ -133,24 +131,19 @@ class PortfoliosController < ApplicationController
       flash[:error] = "El stock no existe."
       return redirect_to @portfolio
     end
-    
     # llamo funcion de compra de acciones del portafolio
     portfolio_stock = @portfolio.portfolioStockBuy(stock, @params2[:price].to_f)
-
     if portfolio_stock[0]
       flash[:notice] = portfolio_stock[1]
     else
       flash[:error] = portfolio_stock[1]
     end
     redirect_to @portfolio
-
   end
 
   def portfolioStockSell
     @params2 = stock_params
     @portfolio = Portfolio.find(params[:id])
-
-    
     # llamo funcion de compra de acciones del portafolio
     portfolio_stock = @portfolio.portfolioStockSell(@params2[:stock_id], @params2[:price].to_f)
 
@@ -160,12 +153,9 @@ class PortfoliosController < ApplicationController
       flash[:error] = portfolio_stock[1]
     end
     redirect_to @portfolio
-
-
   end
 
   def portfolioStockSellAll
-
     @portfolio = Portfolio.find(params[:id])
     @portfolio_stock = @portfolio.portfolio_stocks.find_by(id: params[:stock_id])
     if @portfolio_stock
@@ -176,7 +166,6 @@ class PortfoliosController < ApplicationController
       flash[:error] = "No se encontró el stock en el portafolio."
     end
     redirect_to @portfolio
-
   end
 
   private
@@ -189,5 +178,4 @@ class PortfoliosController < ApplicationController
     def stock_params
       params.expect(stock: [ :stock_id, :price ])
     end
-
 end
