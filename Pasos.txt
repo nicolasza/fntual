@@ -29,3 +29,4 @@
 * cree vistas de portfolio basicas (opte por hacer tablas basicas de datos para no alargar mas el tiempo de desarrollo). 
 * cree controlador de stocks con vistas basicas y ruta.
 * creacion de objetivos de stock de portafolios con funciones de controlador y ruta.
+* para la creacion de los forms me base en la guia https://guides.rubyonrails.org/form_helpers.html

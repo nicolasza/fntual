@@ -1,12 +1,14 @@
-<h1><%= @portfolio.name %></h1>
+<h1>Portafolio: <%= @portfolio.name %></h1>
 
-<h2>Aims</h2>
+ 
+
+<h2>Objetivos</h2>
 
 <div id="portfolio_stock_aims">
     <table>
         <tr>
-            <th>Stock Name</th>
-            <th>Percentage</th>
+            <th>Nombre de Accion</th>
+            <th>Porcentaje objetivo</th>
             <th>Eliminar</th>
         </tr>
     <% @portfolio.portfolio_stock_aims.each do |portfolioStocksAim| %>
@@ -18,7 +20,7 @@
             <%= portfolioStocksAim.percentage %>
             </td>
             <td>
-            <%= button_to "Eliminar", portfolio_stock_aim_path(@portfolio.id,portfolioStocksAim.id), method: :delete, data: { turbo_confirm: "Estas seguro?" } %>
+            <%= button_to "Eliminar", portfolio_stock_aim_path(@portfolio.id,portfolioStocksAim.id), method: :delete, data: { turbo_confirm: "¿Estas seguro de eliminar el objetivo?" } %>
             </td>
         </tr>
     <% end %>
@@ -36,23 +38,99 @@
 </div>
 
 
-<h2>Stocks</h2>
-<% if @portfolio.portfolio_stocks.empty? %>
-  <p>No stocks in this portfolio.</p>
-<% end %>
+
+
+<h2>Acciones</h2>
+<h3>Total Valorizado: <%= @total_value %> $</h3>
+
 <div id="portfolio_stocks">
+
+    <% if flash[:notice] %>
+    <div class="notice"><%= flash[:notice] %></div>
+    <% end %>  
+    <% if @portfolio.portfolio_stocks.empty? %>
+    <p>No hay acciones en el portafolio.</p>
+    <% end %>
+
+
+
+    <table>
+        <tr>
+            <th>Accion</th>
+            <th>Cantidad</th>
+            <th>Valorizado</th>
+            <th>Vender en $</th>
+        </tr>
     <% @portfolio.portfolio_stocks.each do |portfolioStocks| %>
-        <div>
-            <%= portfolioStocks.stock.name %>
+        <tr>
+            <td>
+            <%= portfolioStocks.stock.identifier %>(<%= portfolioStocks.stock.price %>$)
+            </td>
+            <td>
             <%= portfolioStocks.quantity %>
-        </div>
+            </td>
+
+            <td>
+            <%= portfolioStocks.valorized_price %>$ 
+            (<%=((portfolioStocks.valorized_price/@total_value)*100).round(1) %>%)
+            </td>
+
+            <td>
+               <%= form_with model:Stock.new, url: portfolio_stock_sell_path(@portfolio) do |form| %>
+                <%= form.hidden_field :stock_id, value: portfolioStocks.stock_id %>
+                <%= form.number_field :price, value:0, min:0.1,max:portfolioStocks.quantity * portfolioStocks.stock.price,step:0.1 %>
+                <%= form.submit "Vender",data: { turbo_confirm: "¿Estas seguro de vender?" } %>
+                <% end %>
+                <%= button_to "Vender Todo", portfolio_stock_sell_all_path(@portfolio.id,portfolioStocks.id), method: :delete, data: { turbo_confirm: "¿Estas seguro de vender todo?" } %>
+
+            </td>
+
+        </tr>
+    <% end %>
+    </table>
+</div>
+
+
+
+<h2>Comprar</h2>
+<div>
+    <%= form_with model:Stock.new, url: portfolio_stock_buy_path(@portfolio) do |form| %>
+    <%= form.collection_select :stock_id, Stock.all, :id, :identifier_price %>
+    <%= form.number_field :price, value:0, min:0.1,step:0.1 %>
+    <%= form.submit "Comprar",data: { turbo_confirm: "¿Estas seguro de comprar?" }  %>
     <% end %>
 </div>
 
+</br>
+</br>
+<h2>Rebalanceo</h2>
 <%= button_to "Calcular Rebalance", rebalance_path(@portfolio) %>
 
-<% if flash[:rebalance] %>
-  <div ><%= flash[:rebalance] %></div>
+<% if flash[:rebalance] != [] %>
+  <div >
+    <table>
+        <tr>
+            <th>Accion</th>
+            <th>Operacion</th>
+            <th>Valorizado $</th>
+        </tr>
+    <% flash[:rebalance].each do |rebalance| %>
+        <tr>
+            <td>
+            <%= rebalance["stock"]["identifier"] %>
+            </td>
+            <td>
+            <%= rebalance["action"]=='sell'?'Vender':'Comprar' %>
+            </td>
+            <td>
+            <%= rebalance["amount"] %>$
+            </td>
+        </tr>
+    <% end %>
+    </table>
+   <%= button_to "Aplicar rebalanceo", rebalance_apply_path(@portfolio.id), method: :post, data: { turbo_confirm: "¿Estas seguro de aplicar?" } %>
+
+  </div>
 <% end %>
 
 </br>

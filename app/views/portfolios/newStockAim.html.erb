@@ -1,13 +1,13 @@
 <h1>Nuevo Objetivo de Stock</h1>
 <%= form_with model: PortfolioStockAim.new, url: portfolio_stock_aim_add_path(@portfolio) do |form| %>
     <div>
-        <%= form.label :stock_id, "Stock" %>
+        <%= form.label :stock_id, "Accion" %>
         <%= form.collection_select :stock_id, Stock.all, :id, :identifier %>
     </div>
 
     <div>
-        <%= form.label :percentage %>
-        <%= form.number_field :percentage,in: 0.01..@remaining_percentage_aim, step: 0.01 %>
+        <%= form.label :percentage, "Porcentaje" %>
+        <%= form.number_field :percentage,in: 0.1..@remaining_percentage_aim, step: 0.1 %>
     </div>
 
     <div>

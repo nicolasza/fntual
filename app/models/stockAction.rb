@@ -1,9 +1,9 @@
 class StockAction
 
-    def initialize(action, stock, quantity)
+    def initialize(action, stock, amount)
         @action = action
         @stock = stock
-        @quantity = quantity
+        @amount = amount
     end
 
     def action
@@ -14,7 +14,7 @@ class StockAction
         @stock
     end
 
-    def quantity
-        @quantity
+    def amount
+        @amount
     end
 end

@@ -25,6 +25,8 @@ Rails.application.routes.draw do
   get "/portfolios/:id", to: "portfolios#show", as: "portfolio"
   #ruta para reequilibrar un portafolio
   post "/portfolios/:id/rebalance", to: "portfolios#rebalance", as: "rebalance"
+  #ruta para reequilibrar un portafolio
+  post "/portfolios/:id/rebalance_apply", to: "portfolios#rebalance_apply", as: "rebalance_apply"
   #ruta para crear un portafolio
   post "/portfolios", to: "portfolios#create"
 
@@ -44,5 +46,11 @@ Rails.application.routes.draw do
   delete "/portfolios/:id/portfolio_stock_aims/:stock_id", to: "portfolios#removeStockAim", as: "portfolio_stock_aim"
   post "/portfolios/:id/portfolio_stock_aims/", to: "portfolios#addStockAim", as: "portfolio_stock_aim_add"
  
+  #rutas de stock en portafolios
+  post "/portfolios/:id/portfolio_stocks/buy", to: "portfolios#portfolioStockBuy", as: "portfolio_stock_buy"
+  post "/portfolios/:id/portfolio_stocks/sell", to: "portfolios#portfolioStockSell", as: "portfolio_stock_sell"
+  delete "/portfolios/:id/portfolio_stocks/:stock_id", to: "portfolios#portfolioStockSellAll", as: "portfolio_stock_sell_all"
+
+  
 
 end
