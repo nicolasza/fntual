@@ -109,7 +109,7 @@ class PortfoliosController < ApplicationController
 
   def removeStockAim
     @portfolio = Portfolio.find(params[:id])
-    aim = @portfolio.portfolio_stock_aims.find_by(params[:stock_id])
+    aim = @portfolio.portfolio_stock_aims.find_by_id(params[:stock_id])
     if aim
       aim.destroy
     else
